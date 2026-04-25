@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topcoder Profile Video Pipeline</title>
+<style>
+:root {
+  --tc-primary: #2C95D7;
+  --tc-dark: #1A1A2E;
+  --tc-darker: #12121f;
+  --tc-red: #EF3A3A;
+  --tc-yellow: #FFC900;
+  --tc-green: #50C878;
+  --tc-gray: #9D9FA0;
+  --tc-blue: #2C95D7;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--tc-darker);
+  color: #e0e0e0;
+  min-height: 100vh;
+}
+.header {
+  background: var(--tc-dark);
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 2px solid var(--tc-primary);
+}
+.header h1 { font-size: 1.5rem; color: white; }
+.header h1 span { color: var(--tc-primary); }
+.badge {
+  background: var(--tc-primary);
+  color: white;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+.card {
+  background: var(--tc-dark);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.card h2 {
+  font-size: 1.2rem;
+  color: var(--tc-primary);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full { grid-column: 1/-1; }
+label { font-size: 0.85rem; color: #aaa; font-weight: 500; }
+input, select, textarea {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: white;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border 0.2s;
+}
+input:focus, select:focus { border-color: var(--tc-primary); }
+select option { background: var(--tc-dark); }
+.upload-area {
+  border: 2px dashed rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.upload-area:hover, .upload-area.dragover {
+  border-color: var(--tc-primary);
+  background: rgba(44,149,215,0.05);
+}
+.upload-area .icon { font-size: 2.5rem; margin-bottom: 12px; }
+.upload-area p { color: #888; }
+.upload-area .filename { color: var(--tc-primary); font-weight: 600; margin-top: 8px; }
+#fileInput { display: none; }
+.btn {
+  background: linear-gradient(135deg, var(--tc-primary), #1a7abf);
+  color: white;
+  border: none;
+  padding: 14px 36px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.3s;
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 8px 25px rgba(44,149,215,0.3); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+.progress-section { display: none; }
+.progress-section.active { display: block; }
+.progress-bar-bg {
+  height: 8px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 16px 0;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--tc-primary), var(--tc-green));
+  border-radius: 4px;
+  transition: width 0.5s ease;
+  width: 0%;
+}
+.status-text { text-align: center; font-size: 0.9rem; color: #aaa; }
+.status-text .pct { color: var(--tc-primary); font-weight: 700; font-size: 1.3rem; }
+.result-section { display: none; text-align: center; }
+.result-section.active { display: block; }
+.result-section video {
+  max-width: 100%;
+  border-radius: 12px;
+  margin: 16px 0;
+  border: 2px solid rgba(255,255,255,0.1);
+}
+.download-btn {
+  display: inline-block;
+  margin-top: 12px;
+  background: var(--tc-green);
+  color: var(--tc-dark);
+  padding: 12px 32px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: 0.3s;
+}
+.download-btn:hover { opacity: 0.9; }
+.error-msg {
+  background: rgba(239,58,58,0.1);
+  border: 1px solid var(--tc-red);
+  padding: 14px;
+  border-radius: 10px;
+  color: var(--tc-red);
+  display: none;
+  margin-bottom: 16px;
+}
+.error-msg.active { display: block; }
+.color-preview {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-left: 8px;
+  border: 2px solid rgba(255,255,255,0.2);
+}
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.feature-tag {
+  background: rgba(44,149,215,0.1);
+  border: 1px solid rgba(44,149,215,0.2);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+.feature-tag .emoji { font-size: 1.2rem; display: block; margin-bottom: 4px; }
+footer { text-align: center; padding: 30px; color: #555; font-size: 0.8rem; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><span>TOPCODER</span> Profile Video Pipeline</h1>
+  <span class="badge">AI-Powered v3</span>
+</div>
+
+<div class="container">
+  <div class="card">
+    <h2>🎬 Pipeline Features</h2>
+    <div class="features">
+      <div class="feature-tag"><span class="emoji">🎨</span>Visual Enhancement</div>
+      <div class="feature-tag"><span class="emoji">🏷️</span>Topcoder Branding</div>
+      <div class="feature-tag"><span class="emoji">🎙️</span>Audio Cleanup</div>
+      <div class="feature-tag"><span class="emoji">💬</span>Local Whisper Captions</div>
+      <div class="feature-tag"><span class="emoji">🎵</span>Auto-Duck BGM</div>
+      <div class="feature-tag"><span class="emoji">📱</span>Mobile-Ready</div>
+    </div>
+  </div>
+
+  <div class="card" id="formCard">
+    <h2>📤 Process New Video</h2>
+    <div class="error-msg" id="errorMsg"></div>
+    <form id="uploadForm">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Handle *</label>
+          <input type="text" id="handle" placeholder="e.g. tourist" required value="TechStar">
+        </div>
+        <div class="form-group">
+          <label>Rating Color <span class="color-preview" id="colorDot" style="background:#2C95D7"></span></label>
+          <select id="ratingColor" onchange="document.getElementById('colorDot').style.background=this.options[this.selectedIndex].dataset.hex">
+            <option value="red" data-hex="#EF3A3A">🔴 Red</option>
+            <option value="yellow" data-hex="#FFC900">🟡 Yellow</option>
+            <option value="blue" data-hex="#2C95D7" selected>🔵 Blue</option>
+            <option value="green" data-hex="#50C878">🟢 Green</option>
+            <option value="gray" data-hex="#9D9FA0">⚪ Gray</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Primary Track</label>
+          <select id="track1">
+            <option value="development">Development</option>
+            <option value="design">Design</option>
+            <option value="data_science">Data Science</option>
+            <option value="competitive">Competitive Programming</option>
+            <option value="qa">QA</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Secondary Track (optional)</label>
+          <select id="track2">
+            <option value="">None</option>
+            <option value="development">Development</option>
+            <option value="design">Design</option>
+            <option value="data_science">Data Science</option>
+            <option value="competitive">Competitive Programming</option>
+            <option value="qa">QA</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Tagline (optional)</label>
+          <input type="text" id="tagline" placeholder="e.g. Full-Stack Developer | 5x TCO Finalist">
+        </div>
+        <div class="form-group full">
+          <label>Video File (15-60 seconds, max 50MB) *</label>
+          <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+            <div class="icon">🎥</div>
+            <p>Click or drag & drop your raw intro video</p>
+            <div class="filename" id="fileName"></div>
+          </div>
+          <input type="file" id="fileInput" accept="video/*" required>
+        </div>
+      </div>
+      <br>
+      <button type="submit" class="btn" id="submitBtn">🚀 Process Video</button>
+    </form>
+  </div>
+
+  <div class="card progress-section" id="progressSection">
+    <h2>⚙️ Processing Pipeline</h2>
+    <div class="status-text">
+      <div class="pct" id="pctText">0%</div>
+      <div id="stageText">Initializing...</div>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressBar"></div>
+    </div>
+  </div>
+
+  <div class="card result-section" id="resultSection">
+    <h2>✅ Your Branded Video is Ready!</h2>
+    <video id="resultVideo" controls></video>
+    <br>
+    <a class="download-btn" id="downloadLink" href="#" download>⬇️ Download MP4</a>
+  </div>
+</div>
+
+<footer>Topcoder Profile Video Pipeline v3 — Built for the Topcoder Community Challenge</footer>
+
+<script>
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('fileInput');
+const fileName = document.getElementById('fileName');
+
+['dragenter','dragover'].forEach(e => {
+  uploadArea.addEventListener(e, ev => { ev.preventDefault(); uploadArea.classList.add('dragover'); });
+});
+['dragleave','drop'].forEach(e => {
+  uploadArea.addEventListener(e, ev => { ev.preventDefault(); uploadArea.classList.remove('dragover'); });
+});
+uploadArea.addEventListener('drop', ev => {
+  fileInput.files = ev.dataTransfer.files;
+  fileInput.dispatchEvent(new Event('change'));
+});
+fileInput.addEventListener('change', () => {
+  if (fileInput.files.length) {
+    const f = fileInput.files[0];
+    const mb = (f.size/1024/1024).toFixed(1);
+    fileName.textContent = `${f.name} (${mb} MB)`;
+  }
+});
+
+const stages = {
+  0:'Queued...', 5:'Loading video...', 15:'Enhancing video...',
+  25:'Cleaning audio...', 40:'Generating captions (local Whisper)...',
+  55:'Applying Topcoder branding...', 65:'Compositing layers...',
+  72:'Building intro & outro...', 82:'Mixing background music...',
+  90:'Rendering final MP4...', 100:'Complete!'
+};
+function getStageLabel(pct) {
+  let label = 'Processing...';
+  for (const [threshold, text] of Object.entries(stages)) {
+    if (pct >= parseInt(threshold)) label = text;
+  }
+  return label;
+}
+
+document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errEl = document.getElementById('errorMsg');
+  errEl.classList.remove('active');
+
+  if (!fileInput.files.length) {
+    errEl.textContent = 'Please select a video file.';
+    errEl.classList.add('active');
+    return;
+  }
+
+  const fd = new FormData();
+  fd.append('video', fileInput.files[0]);
+  fd.append('handle', document.getElementById('handle').value);
+  fd.append('rating_color', document.getElementById('ratingColor').value);
+  const tracks = [document.getElementById('track1').value,
+                  document.getElementById('track2').value].filter(Boolean).join(',');
+  fd.append('tracks', tracks);
+  fd.append('tagline', document.getElementById('tagline').value);
+
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('progressSection').classList.add('active');
+  document.getElementById('resultSection').classList.remove('active');
+
+  try {
+    const resp = await fetch('/api/process', { method:'POST', body: fd });
+    if (!resp.ok) throw new Error(await resp.text());
+    const { job_id } = await resp.json();
+    pollStatus(job_id);
+  } catch(err) {
+    errEl.textContent = 'Upload failed: ' + err.message;
+    errEl.classList.add('active');
+    document.getElementById('submitBtn').disabled = false;
+    document.getElementById('progressSection').classList.remove('active');
+  }
+});
+
+function pollStatus(jobId) {
+  const iv = setInterval(async () => {
+    try {
+      const resp = await fetch(`/api/status/${jobId}`);
+      const data = await resp.json();
+      const pct = data.progress || 0;
+
+      document.getElementById('pctText').textContent = pct + '%';
+      document.getElementById('progressBar').style.width = pct + '%';
+      document.getElementById('stageText').textContent = getStageLabel(pct);
+
+      if (data.status === 'done') {
+        clearInterval(iv);
+        document.getElementById('progressSection').classList.remove('active');
+        document.getElementById('resultSection').classList.add('active');
+        document.getElementById('resultVideo').src = data.output;
+        document.getElementById('downloadLink').href = data.output;
+        document.getElementById('submitBtn').disabled = false;
+      } else if (data.status === 'error') {
+        clearInterval(iv);
+        const errEl = document.getElementById('errorMsg');
+        errEl.textContent = 'Processing error: ' + (data.error || 'Unknown');
+        errEl.classList.add('active');
+        document.getElementById('progressSection').classList.remove('active');
+        document.getElementById('submitBtn').disabled = false;
+      }
+    } catch(err) { /* retry */ }
+  }, 1500);
+}
+</script>
+</body>
+</html>

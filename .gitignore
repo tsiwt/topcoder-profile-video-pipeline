@@ -1,0 +1,12 @@
+uploads/ 
+outputs/ 
+jobs/ 
+__pycache__/ 
+*.pyc 
+*.swp 
+*.swo 
+*~ 
+*.bak 
+*.tmp 
+.DS_Store 
+.env
