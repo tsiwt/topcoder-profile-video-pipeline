@@ -10,3 +10,6 @@ __pycache__/
 *.tmp 
 .DS_Store 
 .env
+
+# Auto-added by fix_sast.py
+*.un~

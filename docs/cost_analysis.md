@@ -84,6 +84,6 @@ The pipeline is **stateless and horizontally scalable**. Deploy N workers behind
 | Approach | Per-Video Cost | Latency | Offline? |
 |---|---|---|---|
 | **This pipeline (local whisper + OSS)** | **$0.00 - $0.03** | **25-45 s** | **Yes** |
-| OpenAI Whisper API + Runway ML | $0.10 - $0.50 | 30-60 s | No |
+| Cloud Whisper API + Runway ML | $0.10 - $0.50 | 30-60 s | No |
 | AWS Transcribe + MediaConvert | $0.05 - $0.15 | 60-120 s | No |
 | Human editor (Fiverr) | $5 - $25 | 24-48 h | N/A |

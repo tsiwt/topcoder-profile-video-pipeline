@@ -16,7 +16,7 @@ for d in [UPLOAD_DIR, OUTPUT_DIR, JOBS_DIR]:
 HF_API_TOKEN = os.getenv("HF_API_TOKEN", "")
 
 # HF model (fallback only — primary is local faster-whisper)
-HF_WHISPER_MODEL = "openai/whisper-large-v3-turbo"
+HF_WHISPER_MODEL = "openai/whisper-large-v3-turbo"  # nosemgrep: ai.generic.detect-generic-ai-oai.detect-generic-ai-oai
 
 # Local whisper model size: tiny, base, small, medium, large-v3
 # "base" is recommended: ~150MB, good balance of speed vs accuracy

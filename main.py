@@ -17,14 +17,14 @@ def job_status_path(job_id: str) -> Path:
     return JOBS_DIR / f"{job_id}.json"
 
 def save_job(job_id: str, data: dict):
-    with open(job_status_path(job_id), "w") as f:
+    with open(job_status_path(job_id), "w", encoding="utf-8") as f:
         json.dump(data, f)
 
 def load_job(job_id: str) -> dict:
     p = job_status_path(job_id)
     if not p.exists():
         raise HTTPException(404, "Job not found")
-    with open(p) as f:
+    with open(p, encoding="utf-8") as f:
         return json.load(f)
 
 

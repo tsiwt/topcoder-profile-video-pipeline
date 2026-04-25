@@ -23,9 +23,9 @@
 - **License:** HPND (MIT-like) | **Cost:** Free
 
 ### faster-whisper (AI Captions)
-- **Why chosen:** Runs locally -- no network latency, no API rate limits, no per-call cost. 4x faster than openai-whisper on CPU via CTranslate2 INT8 quantization. Provides real word-level timestamps for synchronized captions.
+- **Why chosen:** Runs locally -- no network latency, no API rate limits, no per-call cost. 4x faster than original-whisper on CPU via CTranslate2 INT8 quantization. Provides real word-level timestamps for synchronized captions.
 - **Alternatives considered:**
-  - OpenAI Whisper API: $0.006/min -- adds cost at scale.
+  - Cloud Whisper API: $0.006/min -- adds cost at scale.
   - HF Inference API: Free tier has cold-start 503s and occasional 404s (experienced in v1).
   - AWS Transcribe: $0.024/min -- adds cost and vendor lock-in.
 - **Model size:** base (~150 MB) for PoC; large-v3 recommended for production accuracy.

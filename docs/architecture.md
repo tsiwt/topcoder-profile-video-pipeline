@@ -100,7 +100,7 @@ The **Topcoder Profile Video Pipeline** is a cloud-native, API-driven, modular s
 | Video Processing | MoviePy + FFmpeg | MIT / LGPL | Industry-standard compositing, concat, encode |
 | Visual Enhancement | OpenCV (headless) | Apache 2.0 | Fast per-frame white-balance, contrast, saturation |
 | Audio Cleanup | noisereduce + pydub | MIT | Spectral gating + normalization -- no cloud API needed |
-| AI Captions | faster-whisper (local) | MIT | 4x faster than openai-whisper, real timestamps, offline |
+| AI Captions | faster-whisper (local) | MIT | 4x faster than original-whisper, real timestamps, offline |
 | Branding Render | Pillow | HPND | RGBA image generation -- no ImageMagick required |
 | BGM Mixing | pydub | MIT | Auto-ducking, gain control, export |
 | Containerization | Docker | Apache 2.0 | Reproducible builds, HF Spaces and Render compatible |

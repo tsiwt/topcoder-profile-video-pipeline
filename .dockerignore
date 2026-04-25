@@ -1,0 +1,14 @@
+.git
+__pycache__
+*.pyc
+.env
+uploads/
+outputs/
+jobs/
+*.mp4
+*.un~
+.github/
+tests/
+docs/
+*.md
+!README.md

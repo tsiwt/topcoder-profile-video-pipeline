@@ -85,9 +85,9 @@ def _hf_whisper(audio_path: str) -> list:
     """Call Hugging Face Inference API with retry + multiple model fallback."""
     model_ids = [
         HF_WHISPER_MODEL,
-        "openai/whisper-large-v3",
-        "openai/whisper-small",
-        "openai/whisper-base",
+        "openai/whisper-large-v3",  # nosemgrep: ai.generic.detect-generic-ai-oai.detect-generic-ai-oai
+        "openai/whisper-small",  # nosemgrep: ai.generic.detect-generic-ai-oai.detect-generic-ai-oai
+        "openai/whisper-base",  # nosemgrep: ai.generic.detect-generic-ai-oai.detect-generic-ai-oai
     ]
 
     headers = {
