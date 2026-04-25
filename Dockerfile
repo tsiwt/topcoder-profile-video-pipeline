@@ -1,4 +1,4 @@
-FROM python:3.11-slim@sha256:8f3aba466a471c01e6652d4445bc95f6df8e9da1a0c2fba14a3dce3c2d862a2e
+FROM python:3.11-slim
 
 # Install FFmpeg and system deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
