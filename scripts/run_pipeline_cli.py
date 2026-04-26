@@ -9,6 +9,7 @@ from pipeline.orchestrator import run_pipeline
 
 
 def main():
+    """Execute main operation."""
     parser = argparse.ArgumentParser(description="Topcoder Video Pipeline CLI")
     parser.add_argument("input", help="Path to raw input video")
     parser.add_argument("--output", "-o", default="output_final.mp4", help="Output path")
@@ -43,6 +44,7 @@ def main():
     start = time.time()
 
     def progress(p):
+        """Execute progress operation."""
         bar = "█" * (p // 2) + "░" * (50 - p // 2)
         print(f"\r   [{bar}] {p}%", end="", flush=True)
 

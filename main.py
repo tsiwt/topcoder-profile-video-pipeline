@@ -1,3 +1,5 @@
+"""FastAPI application entry-point for the AI-powered Topcoder member profile video pipeline."""
+
 import uuid, json, asyncio, shutil, traceback
 from pathlib import Path
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, BackgroundTasks
@@ -14,13 +16,16 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 def job_status_path(job_id: str) -> Path:
+    """Execute job_status_path operation."""
     return JOBS_DIR / f"{job_id}.json"
 
 def save_job(job_id: str, data: dict):
+    """Execute save_job operation."""
     with open(job_status_path(job_id), "w", encoding="utf-8") as f:
         json.dump(data, f)
 
 def load_job(job_id: str) -> dict:
+    """Execute load_job operation."""
     p = job_status_path(job_id)
     if not p.exists():
         raise HTTPException(404, "Job not found")

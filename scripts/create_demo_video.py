@@ -15,6 +15,7 @@ OUTPUT = os.path.join(os.path.dirname(os.path.dirname(__file__)),
 
 
 def create_demo():
+    """Execute create_demo operation."""
     os.makedirs(os.path.dirname(OUTPUT), exist_ok=True)
 
     duration = 15
@@ -22,6 +23,7 @@ def create_demo():
     fps = 24
 
     def make_frame(t):
+        """Execute make_frame operation."""
         img = Image.new("RGB", (W, H), (
             int(30 + 20 * np.sin(t * 0.5)),
             int(40 + 30 * np.sin(t * 0.3)),
@@ -55,6 +57,7 @@ def create_demo():
         return np.array(img)
 
     def make_audio(t):
+        """Execute make_audio operation."""
         freq = 220
         return np.sin(2 * np.pi * freq * t) * 0.1
 

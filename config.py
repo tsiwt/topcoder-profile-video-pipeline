@@ -1,3 +1,5 @@
+"""Centralised configuration: paths, environment variables, Topcoder brand constants."""
+
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -13,18 +15,17 @@ ASSETS_DIR = BASE_DIR / "assets"
 for d in [UPLOAD_DIR, OUTPUT_DIR, JOBS_DIR]:
     d.mkdir(exist_ok=True)
 
-HF_API_TOKEN = os.getenv("HF_API_TOKEN", "")
+HF_API_TOKEN: str = os.getenv("HF_API_TOKEN", "")
 
 # HF model (fallback only — primary is local faster-whisper)
 HF_WHISPER_MODEL = "openai/whisper-large-v3-turbo"  # nosemgrep: ai.generic.detect-generic-ai-oai.detect-generic-ai-oai
 
 # Local whisper model size: tiny, base, small, medium, large-v3
 # "base" is recommended: ~150MB, good balance of speed vs accuracy
-LOCAL_WHISPER_MODEL = os.getenv("WHISPER_MODEL", "base")
+LOCAL_WHISPER_MODEL: str = os.getenv("WHISPER_MODEL", "base")
 
 MAX_UPLOAD_MB = int(os.getenv("MAX_UPLOAD_MB", "50"))
-MAX_DURATION_SEC = 60
-
+MAX_DURATION_SEC: int = 60
 # Topcoder brand colors
 TC_COLORS = {
     "red":    "#EF3A3A",
